@@ -1,7 +1,4 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: dark --default;
-}
 
 @theme {
   /* Success & Error */
