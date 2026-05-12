@@ -19,7 +19,7 @@ async function main() {
     // 1. Get Wallet
     const PRIVATE_KEY = process.env.PRIVATE_KEY;
     if (!PRIVATE_KEY) {
-        console.error("❌ Error: PRIVATE_KEY not found in .env");
+        console.error("Error: PRIVATE_KEY not found in .env");
         console.error("Please add your GenLayer-funded private key to .env file:");
         console.error("PRIVATE_KEY=0x...");
         process.exit(1);
@@ -40,7 +40,7 @@ async function main() {
     });
 
     // 2. Read Contract Source
-    const contractPath = path.resolve(__dirname, '../genlayer_contracts/Summarizer.py');
+    const contractPath = path.resolve(__dirname, '../genlayer_contracts/complianceHub.py');
     const contractSource = fs.readFileSync(contractPath, 'utf8');
 
     console.log(`Reading contract from ${contractPath}...`);
@@ -59,11 +59,11 @@ async function main() {
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
     if (receipt.contractAddress) {
-        console.log("\n✅ Deployment Successful!");
+        console.log("\nDeployment successful.");
         console.log(`New Contract Address: ${receipt.contractAddress}`);
         console.log("\nPlease update constants/genlayer_config.ts with this address.");
     } else {
-        console.error("❌ Deployment failed: No contract address in receipt.");
+        console.error("Deployment failed: No contract address in receipt.");
         console.log(receipt);
     }
 }

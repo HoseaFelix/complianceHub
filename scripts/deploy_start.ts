@@ -32,7 +32,7 @@ async function main() {
     });
 
     // 2. Read Contract Source
-    const contractPath = path.resolve(__dirname, '../genlayer_contracts/Summarizer.py');
+    const contractPath = path.resolve(__dirname, '../genlayer_contracts/complianceHub.py');
     const contractSource = fs.readFileSync(contractPath, 'utf8');
 
     console.log(`Deploying contract from ${contractPath}...`);

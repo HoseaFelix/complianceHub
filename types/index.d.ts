@@ -3,8 +3,6 @@ import { policySchema } from "@/constants/constant";
 
 export type PolicyFeedback = z.infer<typeof policySchema>;
 
-// types/feedback.d.ts or types/feedback.ts
-
 export interface RiskyClause {
   clause: string
   risk: string

@@ -14,10 +14,10 @@
 │  └──────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                   │
 │  ┌─ Tab Navigation ──────────────────────────────────────────────────────────┐   │
-│  │  📊 Dashboard  │  📋 Analyze  │  ⚖️ Compare  │  🎯 Benchmark  │  │  │   │
+│  │  Dashboard  │  Analyze  │  Compare  │  Benchmark  │  │  │   │
 │  │               │              │             │                  │  │  │   │
 │  │               │              │             │                  │  │  │   │
-│  │ 📜 Audit Trail │  📈 Reports                                 │   │
+│  │ Audit Trail │  Reports                                 │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                                                                                   │
 │  ┌─ Content Area ────────────────────────────────────────────────────────────┐   │
@@ -334,4 +334,4 @@ Level 4: Complex Consensus (All methods)
 
 ---
 
-This complexity drives higher GenLayer scoring! 🎉
+This complexity drives higher GenLayer scoring.

@@ -1,285 +1,113 @@
-# ComplianceHub - Deployment Guide
+# ComplianceHub Deployment Guide
 
 ## Overview
-ComplianceHub is an enterprise compliance platform built on GenLayer featuring policy analysis, comparison, benchmarking, and reporting capabilities.
 
-## What's Included
+ComplianceHub is a GenLayer-powered policy compliance platform with four core workflows:
 
-### Smart Contract (GenLayer)
-- ✅ Policy Analysis with risk scoring
-- ✅ Policy Comparison with divergence analysis
-- ✅ Compliance Benchmarking (GDPR, CCPA, ISO27001, HIPAA)
-- ✅ Aggregated Compliance Reporting
-- ✅ Immutable Audit Trail
-- ✅ Multi-user workspace isolation
+- Analyze policies for risk
+- Compare analyzed policies
+- Benchmark policies against standards
+- Generate portfolio-level compliance reports
 
-### Frontend (Next.js)
-- ✅ Dashboard with portfolio metrics
-- ✅ Policy analysis interface
-- ✅ Comparison tool
-- ✅ Benchmark runner
-- ✅ Audit trail viewer
-- ✅ Report generator
+## Project Files
 
-## Installation & Setup
+- Smart contract: `genlayer_contracts/complianceHub.py`
+- Frontend: `app/`
+- Contract hooks and config: `hooks/`, `constants/`
+- Deployment helpers: `scripts/`
 
-### 1. Install Dependencies
+## Prerequisites
+
+- Node.js 20+
+- npm
+- A GenLayer wallet or funded private key for contract deployment
+
+## Install Dependencies
+
 ```bash
 npm install
 ```
 
-### 2. Environment Configuration
+## Environment Variables
 
-Create a `.env.local` file:
+Create `.env.local` and set:
 
-```bash
-cp .env.example .env.local
-```
-
-Required variables:
-```
-NEXT_PUBLIC_CONTRACT_ADDRESS=0x<deployed_contract_address>
+```env
+NEXT_PUBLIC_CONTRACT_ADDRESS=0x...
 NEXT_PUBLIC_GENLAYER_CHAIN_ID=62255
 NEXT_PUBLIC_GENLAYER_RPC_URL=https://studio.genlayer.com/api
 ```
 
-### 3. Contract Deployment
+For script-based deployment, also set:
 
-The smart contract at `genlayer_contracts/policyriskanalyzer.py` provides:
+```env
+PRIVATE_KEY=0x...
+```
 
-**Write Methods:**
-- `analyze_policy(policy_text: str, policy_name: str)` - Submit policy for analysis
-- `compare_policies(analysis_a_id: str, analysis_b_id: str)` - Compare two policies
-- `benchmark_against_standard(analysis_id: str, standard_type: str)` - Benchmark against compliance standard
-- `generate_compliance_report()` - Generate portfolio report
+## Deploy The Contract
 
-**Read Methods:**
-- `get_user_analyses(user_address: str)` - Retrieve all user's analyses
-- `get_user_comparisons(user_address: str)` - Retrieve all user's comparisons
-- `get_user_benchmarks(user_address: str)` - Retrieve all user's benchmarks
-- `get_user_audit_trail(user_address: str)` - Retrieve audit trail
+The contract class is `ComplianceHub` in:
 
-**To deploy:**
-1. Go to [GenLayer Studio](https://studio.genlayer.com)
-2. Create a new project
-3. Upload `genlayer_contracts/policyriskanalyzer.py`
-4. Deploy the contract (class name: `ComplianceHub`)
+```text
+genlayer_contracts/complianceHub.py
+```
+
+You can deploy it through GenLayer Studio or with a local script after verifying your wallet setup.
+
+### GenLayer Studio
+
+1. Open `https://studio.genlayer.com`
+2. Create a project
+3. Upload `genlayer_contracts/complianceHub.py`
+4. Deploy the contract
 5. Copy the deployed contract address
-6. Update `NEXT_PUBLIC_CONTRACT_ADDRESS` in `.env.local`
+6. Add that address to `.env.local`
 
-### 4. Development Server
+### Local Script
+
+The repo includes helper scripts in `scripts/`, but confirm the private key and runtime environment before using them.
+
+## Run The App
 
 ```bash
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000)
+Open `http://localhost:3000`.
 
-## Workflow
-
-### 1. Policy Analysis
-```
-1. User submits policy text
-2. GenLayer validators analyze with AI
-3. Result stored on-chain
-4. Risk metrics displayed on dashboard
-```
-
-### 2. Policy Comparison
-```
-1. User selects 2 analyzed policies
-2. Validators compare divergences
-3. Harmonization suggestions generated
-4. Results stored for audit trail
-```
-
-### 3. Compliance Benchmarking
-```
-1. User selects policy & standard (GDPR/CCPA/ISO27001/HIPAA)
-2. Validators assess compliance gaps
-3. Score, timeline, and recommendations generated
-4. Results stored permanently
-```
-
-### 4. Report Generation
-```
-1. User requests compliance report
-2. Contract aggregates all analyses
-3. Portfolio metrics calculated
-4. Executive summary with recommendations
-```
-
-## Wallet Setup
-
-### Option 1: Auto-Generated (Testing)
-The app auto-generates a test wallet. Optionally set in `.env.local`:
-```
-WALLET_PRIVATE_KEY=0x...
-```
-
-### Option 2: MetaMask (Production)
-- Install MetaMask browser extension
-- Connect to GenLayer Studio testnet
-- Use wallet button in app to connect
-
-## Building for Production
+## Production Build
 
 ```bash
 npm run build
 npm start
 ```
 
-## Deployment Platforms
+## Supported Standards
 
-### Vercel (Recommended)
-```bash
-npm i -g vercel
-vercel
-```
-
-### Other Platforms
-- Netlify, Render, Railway, etc.
-
-### Required Environment Variables
-```
-NEXT_PUBLIC_CONTRACT_ADDRESS
-NEXT_PUBLIC_GENLAYER_CHAIN_ID=62255
-NEXT_PUBLIC_GENLAYER_RPC_URL=https://studio.genlayer.com/api
-```
-
-## Package Dependencies
-
-### Core
-- `next` - React framework
-- `react` & `react-dom` - UI
-- `genlayer-js` - GenLayer SDK
-- `zustand` - State management
-- `zod` - Schema validation
-
-### Styling
-- `tailwindcss` - Utility CSS
-- `daisyui` - Tailwind components
-
-### Web3
-- `viem` - Ethereum utilities
-- `wagmi` - React wallet hooks
-
-## Compliance Standards Supported
-
-- **GDPR** - General Data Protection Regulation
-- **CCPA** - California Consumer Privacy Act
-- **ISO 27001** - Information Security Management
-- **HIPAA** - Health Insurance Portability & Accountability
-
-## Contract Storage Structure
-
-### TreeMaps (Multi-user isolation)
-- `analyses: TreeMap[str, PolicyAnalysis]` - All policy analyses
-- `user_analyses: TreeMap[str, DynArray[str]]` - Per-user analysis IDs
-- `comparisons: TreeMap[str, PolicyComparison]` - Policy comparisons
-- `benchmarks: TreeMap[str, ComplianceBenchmark]` - Benchmarks
-- `audit_trails: TreeMap[str, AuditTrail]` - Activity log
-
-## Validation Rules
-
-### Policy Analysis
-- Risk score: 0-100 (integer)
-- Risk level: Low/Medium/High/Critical
-- Risky clauses: List of {clause, risk, reason}
-- Compliance flags: List of strings
-
-### Policy Comparison
-- Divergence score: 0-100 (0 = identical, 100 = completely different)
-- Key differences: List of divergences
-- Shared risks: List of common risks
-
-### Benchmarking
-- Compliance score: 0-100 (100 = fully compliant)
-- Gaps: List of missing controls
-- Improvement priority: High/Medium/Low
-- Timeline: Suggested remediation timeframe
-
-## Troubleshooting
-```
-Submits a word/phrase for lexicographic analysis using GenLayer consensus.
-
-### View Functions
-```python
-get_analysis(analysis_id: str) -> WordAnalysis
-get_user_analyses(user_address: str) -> List[WordAnalysis]
-get_analysis_count() -> int
-get_latest_analysis_id() -> str
-```
+- GDPR
+- CCPA
+- ISO 27001
+- HIPAA
 
 ## Troubleshooting
 
-### "Wallet not connected"
-- Click the wallet button in top-right
-- Use auto-generated wallet or connect MetaMask
+### Wallet not connected
 
-### Transaction timeout
-- GenLayer can take 30-60 seconds to finalize
-- Check browser console for transaction hash
-- Verify transaction on GenLayer Studio explorer
+- Connect MetaMask or use the generated local wallet flow
+- Confirm the wallet is on GenLayer Studio
 
-### "Contract address not configured"
-- Check `.env.local` has `NEXT_PUBLIC_CONTRACT_ADDRESS`
-- Ensure you deployed the contract on GenLayer Studio
+### Contract address not configured
 
-### Empty analysis results
-- Ensure the contract was deployed correctly
-- Check GenLayer Studio console for contract errors
-- Verify all required fields in response
+- Make sure `NEXT_PUBLIC_CONTRACT_ADDRESS` is present in `.env.local`
+- Restart the dev server after updating env vars
 
-## File Structure
+### Deployment script fails
 
-```
-app/
-├── components/
-│   ├── input.tsx          # Word input form (replaces YouTube input)
-│   ├── animatedContent.tsx # Results display (updated for word analysis)
-│   └── WalletButton.tsx
-├── context/
-│   └── WalletContext.tsx   # Wallet state management
-├── page.tsx               # Main page (updated branding)
-├── layout.tsx
-└── globals.css
+- Verify `PRIVATE_KEY` is set
+- Confirm the contract path points to `genlayer_contracts/complianceHub.py`
+- Check that the wallet has enough GEN for deployment
 
-genlayer_contracts/
-└── dictionary.py          # Smart contract (AI Dictionary)
+### Transaction takes a long time
 
-constants/
-├── genlayer_config.ts     # GenLayer configuration
-└── constant.js            # Utilities (Supadata removed)
-
-store/
-└── store.ts               # Zustand stores
-
-types/
-└── index.d.ts             # TypeScript types
-```
-
-## Performance Notes
-
-- Each analysis costs approximately 0.005 GEN
-- GenLayer consensus takes 30-60 seconds
-- Analyses are stored on-chain permanently
-- No centralized API dependencies
-
-## Support
-
-For GenLayer documentation, visit: https://docs.genlayer.com
-
-## Next Steps
-
-1. ✅ Dependencies cleaned up (removed Supadata, YouTube, Gemini)
-2. ✅ Contract updated to `AIDictionary` with lexicographic focus
-3. ✅ Frontend converted to word/phrase input
-4. ✅ UI updated with dictionary branding
-5. 📋 **TODO**: Deploy contract to GenLayer Studio
-6. 📋 **TODO**: Run `npm install` to get clean dependencies
-7. 📋 **TODO**: Update `.env.local` with your contract address
-8. 📋 **TODO**: Test locally with `npm run dev`
-9. 📋 **TODO**: Deploy to production platform
-
-Happy lexicographing! 📚✨
+- GenLayer consensus can take tens of seconds
+- Wait for finalization and review the transaction hash in logs
